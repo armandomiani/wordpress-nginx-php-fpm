@@ -1,0 +1,68 @@
+version: '3'
+
+services:
+  # Nginx Service
+  nginx:
+    user: nginx
+    container_name: nginx
+    build:
+      context: ./docker/nginx
+      dockerfile: Dockerfile
+    cpus: 1.0
+    mem_limit: 2gb
+    mem_reservation: 2gb
+    mem_swappiness: 0
+    ports:
+      - "80:80"
+    volumes:
+      - wordpress_data:/var/www/html
+    networks:
+      - wordpress_network
+    depends_on:
+      - wordpress
+
+  # WordPress (PHP-FPM) Service
+  wordpress:
+    user: www-data
+    container_name: wordpress
+    build:
+      context: ./docker/wordpress
+      dockerfile: Dockerfile
+    cpus: 1.0
+    mem_limit: 2gb
+    mem_reservation: 2gb
+    mem_swappiness: 0
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+    volumes:
+      - wordpress_data:/var/www/html
+    ports:
+      - "127.0.0.1:8080:8080"
+    networks:
+      - wordpress_network
+    depends_on:
+      - db
+
+  # MySQL Database Service
+  db:
+    image: mysql:8.0
+    container_name: db
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - wordpress_network
+
+volumes:
+  db_data:
+  wordpress_data:
+
+networks:
+  wordpress_network:
