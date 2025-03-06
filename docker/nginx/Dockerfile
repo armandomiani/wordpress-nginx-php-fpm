@@ -22,7 +22,3 @@ USER nginx
 
 # Expose port 80 (HTTP)
 EXPOSE 80
-
-# Set the entrypoint
-ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["nginx", "-g", "daemon off;"]
