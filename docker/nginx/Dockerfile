@@ -13,10 +13,6 @@ RUN mkdir -p /var/www \
 # Copy the custom NGINX configuration
 COPY wordpress.conf /etc/nginx/conf.d/default.conf
 
-# Copy the entrypoint script
-COPY docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
-
 # Switch to the non-root user
 USER nginx
 
