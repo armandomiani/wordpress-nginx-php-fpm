@@ -69,7 +69,7 @@ ab -n 1000 -c 100 -g tests/output.tsv http://localhost
 
 * `-n`: Total number of requests to be performed
 * `-c`: Max number of requests at the same time
-* `-g`: TSV results output fil
+* `-g`: TSV results output file
 
 #### Generate Response Time over Requests chart
 
